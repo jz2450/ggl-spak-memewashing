@@ -1,0 +1,27 @@
+{
+  "filename": "Whitewashing uses carefully chosen l.mp3",
+  "total_sentences": 4,
+  "duration": 26.78,
+  "sentences": [
+    {
+      "sentence": "Whitewashing uses carefully chosen language to make harmful actions appear acceptable",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "This technique replaces direct descriptions with euphemistic terms that sound more palatable",
+      "id": 2,
+      "start": 6.2
+    },
+    {
+      "sentence": "Examples include calling forced relocation resettlement programs or military actions against civilians pacification campaigns",
+      "id": 3,
+      "start": 12.54
+    },
+    {
+      "sentence": "Corporations describe layoffs as rightsizing and environmental damage as externalities",
+      "id": 4,
+      "start": 21.26
+    }
+  ]
+}
