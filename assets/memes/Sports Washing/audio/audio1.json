@@ -1,0 +1,22 @@
+{
+  "filename": "2250b146-d2f1-4c5a-9080-4048798e44ea.mp3",
+  "total_sentences": 3,
+  "duration": 24.14,
+  "sentences": [
+    {
+      "sentence": "Sportswashing leverages athletic competition to redirect international attention and overshadow political controversies",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "The 1978 FIFA World Cup in Argentina demonstrates this, the military junta invested heavily in hosting while implementing repressive domestic policies",
+      "id": 2,
+      "start": 8.16
+    },
+    {
+      "sentence": "Countries often bid for major tournaments, spending far more than economic benefits justify",
+      "id": 3,
+      "start": 18.68
+    }
+  ]
+}

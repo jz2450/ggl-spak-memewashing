@@ -1,17 +1,16 @@
-// timeline animations
-// handle multiple highlights
-// add audio
-// add captions
-// hide cursor
+// TODO:
+// fill empty square on icon grid
+// update bash script to handle keyboard interrupt and end server
+// update icons
+// check if meme is wider than window, then scale other way
+// volume variable
+// change window title for each washing
 
-
-let numOfMemes = 6;
-let numOfVO = 1;
+let numOfMemes = 5;
+let numOfVO = 3;
 let bgColour;
-let memes = [];
-let voiceovers = [];
-let icons = [];
-let categories = [
+let highlights = [];
+let categories = [ // names of folders containing media
     "White Washing",
     "Sports Washing",
     "Green Washing",
@@ -19,7 +18,6 @@ let categories = [
     "Red Washing",
     "Blue Washing",
     "Purple Washing",
-    "Bee Washing",
     "Vegan Washing",
     "Pink Washing"
 ];
@@ -27,36 +25,50 @@ let selector;
 let cols = 5;
 let rows = 2;
 let mode = "menu";
-// let highlight;
-let highlights = [];
+let icons = [];
+let menuTimer;
+let captionEn;
+let captionAr;
+let idleCapEn;
+let idleCapAr;
+
+window.addEventListener('load', function () {
+    captionEn = document.getElementById("captions-en");
+    captionAr = document.getElementById("captions-ar");
+    idleCapEn = captionEn.innerHTML;
+    idleCapAr = captionAr.innerHTML;
+});
 
 function preload() {
-    // categories.forEach(category => {
-    //     for (let i = 1; i <= numOfMemes; i++) {
-    //         let meme = loadImage(`./assets/memes/${category}/${i}.jpg`, (loadedImage) => {
-    //             memes.push(meme);
-    //         }, (error) => {
-    //             console.log("could not find file", error);
-    //         });
-    //     }
-    // });
-
-    // comment out when all memes are present
-    for (let i = 1; i <= numOfMemes; i++) {
-        let meme = loadImage(`./assets/memes/Green Washing/${i}.jpg`, (loadedImage) => {
-            meme.resize(0, 640);
-            memes.push(meme);
-        }, (error) => {
-            console.log("could not find file", error);
-        });
-    }
-    for (let i = 1; i <= numOfVO; i++) {
-        let voiceover = loadSound(`./assets/memes/Green Washing/audio/${i}.mp3`, (loadedAudio) => {
-            voiceovers.push(voiceover);
-        }, (error) => {
-            console.log("could not find file", error);
-        });
-    }
+    categories.forEach(category => {
+        let memes = [];
+        for (let i = 1; i <= numOfMemes; i++) {
+            let meme = loadImage(`./assets/memes/${category}/${i}.jpeg`, (loadedImage) => {
+                meme.resize(0, 620);
+                memes[i-1] = meme;
+            }, (error) => {
+                console.log("could not find image file ", error);
+            });
+        }
+        let voiceovers = [];
+        for (let i = 1; i <= numOfVO; i++) {
+            let voiceover = loadSound(`./assets/memes/${category}/audio/audio${i}.mp3`, (loadedAudio) => {
+                voiceovers[i-1] = voiceover;
+            }, (error) => {
+                console.log("could not find audio file ", error);
+            });
+        }
+        let captions = [];
+        for (let i = 1; i <= numOfVO; i++) {
+            fetch(`./assets/memes/${category}/audio/audio${i}.json`)
+                .then(response => response.json())
+                .then(jsonData => {
+                    captions[i-1] = jsonData;
+                })
+                .catch(error => console.error("could not read caption json ", error));
+        }
+        highlights.push(new Highlight(category, memes, captions, voiceovers));
+    });
 }
 
 function setup() {
@@ -68,7 +80,6 @@ function setup() {
     background(bgColour);
     createIconGrid();
     selector = new Selector(0, 0);
-    highlights.push(new Highlight("Green Washing", memes, "captionsjson", "audiofiles"));
 }
 
 function draw() {
@@ -79,36 +90,42 @@ function draw() {
         })
         selector.draw();
     } else if (mode == "highlight") {
-        // highlights[0].update();
-        highlights[0].draw();
+        highlights[selector.selected].update();
+        highlights[selector.selected].draw();
     }
-}
-
-function mouseClicked() {
-    highlights[0].progress();
-    // voiceovers[0].play();
 }
 
 function keyPressed() {
     if (keyCode === LEFT_ARROW) {
-        selector.goLeft();
+        if (mode == "menu") { selector.goLeft(); }
     } else if (keyCode === RIGHT_ARROW) {
-        selector.goRight();
+        if (mode == "menu") { selector.goRight(); }
     } else if (keyCode === UP_ARROW) {
-        selector.goUp();
+        if (mode == "menu") { selector.goUp(); }
     } else if (keyCode === DOWN_ARROW) {
-        selector.goDown();
+        if (mode == "menu") { selector.goDown(); }
     } else if (keyCode === 32) { //space
-        mode = "highlight";
+        if (mode != "highlight") {
+            mode = "highlight";
+            highlights[selector.selected].start();
+            menuTimer = setTimeout(() => {
+                mode = "menu";
+                highlights[selector.selected].reset();
+            }, 37000); // return to menu after 35 secs
+        }
     } else if (keyCode === ESCAPE) {
         mode = "menu";
         highlights[selector.selected].reset();
+        clearTimeout(menuTimer);
     }
 }
 
 function createIconGrid() {
     for (let row = 0; row < 2; row++) {
         for (let col = 0; col < 5; col++) {
+            if (col == 4 && row == 1) {
+                break;
+            }
             let iconimage = loadImage(`./assets/memes/${categories[col + (row * 5)]}/icon.ico`)
             icons.push(new Icon(categories[col + (row * 5)], iconimage, col, row))
         }
@@ -122,40 +139,78 @@ class Highlight {
         this.memes = memes;
         this.captions = captions;
         this.audio = audio;
-        this.frame = 0;
+        this.timers = [];
+        this.playcount = 0;
+        this.audioIndex = 0;
+        this.captionTimers = [];
     }
 
-    progress() {
-        this.carousel.next();
+    setCaptions(index) {
+        console.log(this.captions[index]["sentences"]);
+        this.captions[index]["sentences"].forEach((sentence) => {
+            // console.log(sentence["start"]);
+            this.captionTimers.push(setTimeout(() => {
+                captionEn.innerHTML = sentence["sentence"];
+                // captionEn.innerHTML = sentence["sentence"];
+            }, sentence["start"] * 1000));
+        });
     }
 
     reset() {
-        this.frame = 0;
+        this.audio[this.audioIndex].stop();
         this.title.reset();
         this.carousel.reset();
+        captionEn.innerHTML = idleCapEn;
+        captionAr.innerHTML = idleCapAr;
+        // remove timers
+        while (this.timers.length > 0) {
+            clearTimeout(this.timers.pop());
+        }
+        while (this.captionTimers.length > 0) {
+            clearTimeout(this.captionTimers.pop());
+        }
     }
 
-    draw() { // timing animation elements
-        this.frame++;
-        if (toSeconds(this.frame) < 2) {
-            this.title.fadeIn();
-            this.title.update();
-            this.title.draw();
-        } else if (toSeconds(this.frame) < 4) {
-            this.title.update();
-            this.title.draw();
-        } else if (toSeconds(this.frame) < 5) {
+    start() {
+        this.playcount++;
+        this.audioIndex = this.playcount % 3;
+        // start audio
+
+        console.log(this.audio[this.audioIndex], this.audioIndex);
+        this.audio[this.audioIndex].play();
+        // time captions
+        this.setCaptions(this.audioIndex);
+
+        // animation timers
+        // fade in title
+        this.title.reset();
+        this.title.fadeIn();
+        // fade out title and fade in carousel
+        this.timers.push(setTimeout(() => {
             this.title.fadeOut();
-            this.title.update();
-            this.title.draw();
+            this.carousel.fadeIn();
+            this.carousel.next();
+            // for each meme, 
+            this.carousel.memes.forEach((meme, i) => {
+                this.timers.push(setTimeout(() => {
+                    // console.log(i);
+                    this.carousel.next();
+                }, 32000 * (i + 1) / this.carousel.memes.length));
+            });
+        }, 3000));
+        this.timers.push(setTimeout(() => {
+            this.carousel.fadeOut();
+        }, 35000));
+    }
 
-            this.carousel.update();
-            this.carousel.draw();
-        } else if (true) {
+    update() {
+        this.title.update();
+        this.carousel.update();
+    }
 
-            this.carousel.update();
-            this.carousel.draw();
-        }
+    draw() {
+        this.title.draw();
+        this.carousel.draw();
     }
 }
 
@@ -165,34 +220,41 @@ function toSeconds(frameCount) {
 
 class Carousel {
     constructor(memes) {
-        this.num = memes.length;
         this.memes = memes;
         this.angle = 0; // 0-360
-        this.targetAngle = -720;
+        this.targetAngle = 72;
         this.dAngle = 0.05;
         this.transparency = 0; // 0-255
-        this.targetTransparency = 255;
-        this.dTransparency = 0.03;
+        this.targetTransparency = 0;
+        this.dTransparency = 0.05;
         this.position = 0;
+    }
+
+    fadeOut() {
+        this.targetTransparency = 0;
+    }
+
+    fadeIn() {
+        this.targetTransparency = 255;
     }
 
     next() {
         this.position++;
-        if (this.position >= this.num) {
-            this.targetAngle -= 1080;
-            this.targetTransparency = 0;
+        if (this.position > this.memes.length) {
+            // this.targetAngle -= 1080;
+            // this.targetTransparency = 0;
         } else {
-            let angleBetweenImages = 360 / this.num;
-            this.targetAngle -= angleBetweenImages;
+            let angleBetweenImages = 360 / this.memes.length;
+            this.targetAngle -= angleBetweenImages + 360;
         }
-
+        // console.log(this.position);
     }
 
     reset() {
         this.angle = 0;
-        this.targetAngle = 360;
+        this.targetAngle = 72;
         this.transparency = 0;
-        this.targetTransparency = 255;
+        this.targetTransparency = 0;
         this.position = 0;
     }
 
@@ -205,7 +267,7 @@ class Carousel {
         push();
         translate(width / 2, height * 3);
         imageMode(CENTER);
-        let angleBetweenImages = 360 / this.num;
+        let angleBetweenImages = 360 / this.memes.length;
         this.memes.forEach((meme, i) => {
             push();
             rotate(i * angleBetweenImages + this.angle);
@@ -222,7 +284,7 @@ class Title {
     constructor(string) {
         this.string = string;
         this.fgPos = {
-            x: width * 2 / 3,
+            x: width * 2,
             y: height * 2 / 3
         }
         this.bgPos = {
@@ -251,7 +313,7 @@ class Title {
 
     reset() {
         this.fgPos = {
-            x: width * 2 / 3,
+            x: width * 2,
             y: height * 2 / 3
         }
         this.bgPos = {
@@ -318,7 +380,7 @@ class Selector {
         noStroke();
         fill("rgba(0, 0, 255, 0.3)");
         rect(-60, -110, 120, 180);
-        imageMode(CENTER, CENTER);
+        imageMode(CENTER);
         image(this.cursor, -50, 0, 50, 50)
         pop();
     }

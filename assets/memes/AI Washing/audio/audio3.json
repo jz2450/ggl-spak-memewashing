@@ -1,0 +1,22 @@
+{
+  "filename": "f3b8499d-0d36-44b8-93a2-c8d141cf0209.mp3",
+  "total_sentences": 3,
+  "duration": 27.68,
+  "sentences": [
+    {
+      "sentence": "AI washing exploits, public fascination with artificial intelligence to legitimize expanded monitoring and control systems",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Organizations present routine data collection as revolutionary AI breakthroughs making surveillance appear inevitable and beneficial",
+      "id": 2,
+      "start": 9.38
+    },
+    {
+      "sentence": "Corporate AI analytics frequently involve basic database searches rebranded with sophisticated terminology that sounds more advanced than traditional oversight methods",
+      "id": 3,
+      "start": 17.9
+    }
+  ]
+}

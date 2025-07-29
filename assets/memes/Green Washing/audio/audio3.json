@@ -1,0 +1,27 @@
+{
+  "filename": "c3d8b01b-d7ff-4d70-8b6d-71f41986215d.mp3",
+  "total_sentences": 4,
+  "duration": 28.32,
+  "sentences": [
+    {
+      "sentence": "Greenwashing transforms pollution into public relations victories through sophisticated environmental deception",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Unlike outright denial, this approach acknowledges environmental concerns while providing false solutions",
+      "id": 2,
+      "start": 7.92
+    },
+    {
+      "sentence": "Airlines promote carbon offset programs while expanding flight schedules that increase overall emissions",
+      "id": 3,
+      "start": 14.88
+    },
+    {
+      "sentence": "Plastic manufacturers tout recycling initiatives while producing more single-use products than ever before",
+      "id": 4,
+      "start": 21.8
+    }
+  ]
+}

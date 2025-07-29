@@ -1,0 +1,22 @@
+{
+  "filename": "703fd985-461c-47cc-a972-a235a4e52bcb.mp3",
+  "total_sentences": 3,
+  "duration": 26.2,
+  "sentences": [
+    {
+      "sentence": "Sportswashing involves governments using high-profile sporting events to improve their international reputation while distracting from controversial policies",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "The 1936 Berlin Olympics exemplify this where Nazi Germany used athletics spectacle to present a favorable image while concealing systematic persecution",
+      "id": 2,
+      "start": 10.0
+    },
+    {
+      "sentence": "Modern strategies include hosting major tournaments or purchasing prominent sports teams",
+      "id": 3,
+      "start": 20.84
+    }
+  ]
+}

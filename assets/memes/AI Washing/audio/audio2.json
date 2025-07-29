@@ -1,0 +1,22 @@
+{
+  "filename": "AI washing transforms ordinary surve.mp3",
+  "total_sentences": 3,
+  "duration": 25.32,
+  "sentences": [
+    {
+      "sentence": "AI-washing transforms ordinary surveillance infrastructure into seemingly progressive technological solutions",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "The technique involves applying artificial intelligence, branding to basic monitoring systems, making them appear more sophisticated than traditional methods",
+      "id": 2,
+      "start": 7.64
+    },
+    {
+      "sentence": "Retail stores promote AI-powered loss prevention that primarily uses standard camera systems with basic behavior detection software",
+      "id": 3,
+      "start": 17.04
+    }
+  ]
+}

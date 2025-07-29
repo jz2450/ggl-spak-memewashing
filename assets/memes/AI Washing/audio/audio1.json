@@ -1,0 +1,22 @@
+{
+  "filename": "AI washing rebrands basic surveillan.mp3",
+  "total_sentences": 3,
+  "duration": 26.16,
+  "sentences": [
+    {
+      "sentence": "AI-washing rebrands basic surveillance technology as cutting-edge innovation to make monitoring systems more socially acceptable",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Companies use artificial intelligence terminology to describe traditional data collection methods with modern interfaces",
+      "id": 2,
+      "start": 9.44
+    },
+    {
+      "sentence": "AI-powered hiring systems primarily rely on keyword matching, yet the AI label makes automated rejections seem more objective and progressive",
+      "id": 3,
+      "start": 17.06
+    }
+  ]
+}

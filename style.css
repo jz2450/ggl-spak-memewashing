@@ -1,5 +1,9 @@
 /* https://colorswall.com/palette/264460 */
 
+* {
+    cursor: none;
+}
+
 html, body {
     margin: 0;
 }

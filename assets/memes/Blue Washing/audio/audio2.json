@@ -1,0 +1,22 @@
+{
+  "filename": "12737181-ce3c-4576-8fc8-ea8c393356f9.mp3",
+  "total_sentences": 3,
+  "duration": 26.16,
+  "sentences": [
+    {
+      "sentence": "Blue washing exploits the credibility of international institutions to legitimize harmful practices through superficial partnerships or declarations",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Organizations seek UN consultative status or participate in global summits to gain respectability while avoiding meaningful compliance with international standards",
+      "id": 2,
+      "start": 10.06
+    },
+    {
+      "sentence": "This creates an illusion of global citizenship without substantive behavioral change",
+      "id": 3,
+      "start": 20.88
+    }
+  ]
+}

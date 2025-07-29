@@ -1,0 +1,27 @@
+{
+  "filename": "Whitewashing transforms perception t.mp3",
+  "total_sentences": 4,
+  "duration": 32.1,
+  "sentences": [
+    {
+      "sentence": "Whitewashing transforms perception through strategic language that minimizes negative associations while emphasizing positive aspects",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "This strategy serves as the template for all institutional washing",
+      "id": 2,
+      "start": 9.8
+    },
+    {
+      "sentence": "Throughout history, colonial powers describe conquest as civilizing missions while modern corporations frame environmental destruction as resource development",
+      "id": 3,
+      "start": 14.66
+    },
+    {
+      "sentence": "Language influences emotions wouldn't you react differently to enhanced interrogation versus torture",
+      "id": 4,
+      "start": 25.4
+    }
+  ]
+}

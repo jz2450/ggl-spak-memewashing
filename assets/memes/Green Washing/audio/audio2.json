@@ -1,0 +1,27 @@
+{
+  "filename": "b6992dde-617f-4ad5-b57c-ef1c3d68d563.mp3",
+  "total_sentences": 4,
+  "duration": 29.46,
+  "sentences": [
+    {
+      "sentence": "Greenwashing uses environmental language to mass destructive practices, creating an illusion of sustainability",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "The technique involves emphasizing minor improvements, while ignoring major environmental damage",
+      "id": 2,
+      "start": 8.06
+    },
+    {
+      "sentence": "Automobile manufacturers promote cleaner vehicles that still rely on fossil fuels, while delaying transitions to electric alternatives",
+      "id": 3,
+      "start": 14.66
+    },
+    {
+      "sentence": "Chemical companies advertise reduced packaging while maintaining toxic production processes",
+      "id": 4,
+      "start": 23.38
+    }
+  ]
+}

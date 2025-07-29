@@ -1,0 +1,27 @@
+{
+  "filename": "6b655fe3-8248-493b-b806-9341793aadd7.mp3",
+  "total_sentences": 4,
+  "duration": 26.3,
+  "sentences": [
+    {
+      "sentence": "Redwashing transforms indigenous imagery into marketing tools while perpetuating systemic inequalities",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Sports teams historically use Native American mascots and imagery",
+      "id": 2,
+      "start": 7.16
+    },
+    {
+      "sentence": "Like the Atlanta Braves' tomahawk chop, or teams including Indians and Braves",
+      "id": 3,
+      "start": 11.52
+    },
+    {
+      "sentence": "While the concern of indigenous communities facing discrimination were ignored, this commodifies indigenous culture while avoiding genuine consultation or addressing real issues",
+      "id": 4,
+      "start": 16.32
+    }
+  ]
+}

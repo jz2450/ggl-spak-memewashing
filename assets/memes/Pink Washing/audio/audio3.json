@@ -1,0 +1,17 @@
+{
+  "filename": "8b4d6f03-5eed-4774-a5a0-a9a2cce4bcdc.mp3",
+  "total_sentences": 2,
+  "duration": 25.82,
+  "sentences": [
+    {
+      "sentence": "Pinkwashing involves organizations using LGBTQ+ symbols and messaging to improve their public image while maintaining discriminatory practices or policies",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Companies display rainbow logos during Pride Month or sponsor LGBTQ+ events while their workplace policies hiring practices or corporate donations may contradict their public support for LGBTQ+ rights and equality",
+      "id": 2,
+      "start": 11.02
+    }
+  ]
+}

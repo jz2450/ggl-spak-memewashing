@@ -1,0 +1,17 @@
+{
+  "filename": "Bee washing involves companies creat.mp3",
+  "total_sentences": 2,
+  "duration": 29.84,
+  "sentences": [
+    {
+      "sentence": "B-washing involves companies creating highly visible pollinator-friendly initiatives while maintaining business practices that harm B populations",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Organizations install photogenic rooftop B-hives or sponsor urban B-gardons for social media content while their broader operations contribute to habitat destruction through pesticide use, deforestation, or industrial agriculture that threatens actual pollinator ecosystems",
+      "id": 2,
+      "start": 10.12
+    }
+  ]
+}

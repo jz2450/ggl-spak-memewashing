@@ -1,0 +1,22 @@
+{
+  "filename": "b7e3ebe0-08a6-4d60-8705-096f48b59ea5.mp3",
+  "total_sentences": 3,
+  "duration": 26.02,
+  "sentences": [
+    {
+      "sentence": "Sportswashing exploits athletic competitions' emotional power to reshape international perceptions and create political legitimacy",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "This strategy uses sports for soft power projection requiring substantial investments in infrastructure, team ownership, or tournament hosting rights",
+      "id": 2,
+      "start": 9.12
+    },
+    {
+      "sentence": "Sports generate genuine excitement that can coexist with political concerns creating complex audience responses",
+      "id": 3,
+      "start": 18.98
+    }
+  ]
+}

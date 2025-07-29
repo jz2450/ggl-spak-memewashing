@@ -1,0 +1,22 @@
+{
+  "filename": "cedf302a-5d7b-416b-94e4-c1ead277f07c.mp3",
+  "total_sentences": 4,
+  "duration": 27.08,
+  "sentences": [
+    {
+      "sentence": "Beewashing exploits, public concern about declining bee populations to create false environmental credibility through symbolic conservation projects",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Companies promote honeybee initiatives which aren't typically endangered while ignoring threats to native bee species facing genuine extinction",
+      "id": 2,
+      "start": 10.5
+    },
+    {
+      "sentence": "These marketing-friendly projects generate positive publicity without addressing the systemic environmental problems threatening pollinators",
+      "id": 3,
+      "start": 19.2
+    }
+  ]
+}

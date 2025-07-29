@@ -1,0 +1,27 @@
+{
+  "filename": "19fe27d5-1f58-4e3e-9d5d-3b329fb27d17.mp3",
+  "total_sentences": 4,
+  "duration": 31.18,
+  "sentences": [
+    {
+      "sentence": "Greenwashing disguises environmental harm as eco-friendly progress through misleading sustainability claims",
+      "id": 1,
+      "start": 0.0
+    },
+    {
+      "sentence": "Companies can exploit consumers' desire to make responsible choices by presenting minor improvements while ignoring major environmental problems",
+      "id": 2,
+      "start": 7.68
+    },
+    {
+      "sentence": "Energy companies advertise small renewable investments while remaining heavily fossil fuel-dependent",
+      "id": 3,
+      "start": 17.28
+    },
+    {
+      "sentence": "Fast-fashion brands showcase recycled materials in limited collections while maintaining unsustainable production",
+      "id": 4,
+      "start": 23.88
+    }
+  ]
+}
