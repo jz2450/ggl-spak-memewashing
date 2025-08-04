@@ -1,7 +1,6 @@
 // TODO:
 // update bash script to handle keyboard interrupt and end server
 // arabic captions
-// scanline animations
 
 let numOfMemes = 5;
 let numOfVO = 3;
@@ -132,7 +131,7 @@ function keyPressed() {
             menuTimer = setTimeout(() => {
                 mode = "menu";
                 highlights[selector.selected].reset();
-            }, 37000); // return to menu after 35 secs
+            }, 33000); // return to menu after 33 secs
         }
     } else if (keyCode === ESCAPE) {
         mode = "menu";
@@ -205,22 +204,21 @@ class Highlight {
         // fade in title
         this.title.reset();
         this.title.fadeIn();
-        // fade out title and fade in carousel
+        // fade out title
         this.timers.push(setTimeout(() => {
             this.title.fadeOut();
-            this.carousel.fadeIn();
-            this.carousel.next();
-            // for each meme, 
-            this.carousel.memes.forEach((meme, i) => {
-                this.timers.push(setTimeout(() => {
-                    // console.log(i);
-                    this.carousel.next();
-                }, 32000 * (i + 1) / this.carousel.memes.length));
-            });
         }, 3000));
+
+        this.carousel.memes.forEach((meme, i) => {
+            this.timers.push(setTimeout(() => {
+                // console.log(i);
+                this.carousel.next();
+            }, 4000 + (30000 * (i) / this.carousel.memes.length)));
+        });
+
         this.timers.push(setTimeout(() => {
             this.carousel.fadeOut();
-        }, 35000));
+        }, 32000));
 
         // set window name
         windowName.innerHTML = this.name;
@@ -244,62 +242,76 @@ function toSeconds(frameCount) {
 class Carousel {
     constructor(memes) {
         this.memes = memes;
-        this.angle = 0; // 0-360
-        this.targetAngle = 72;
-        this.dAngle = 0.05;
-        this.transparency = 0; // 0-255
-        this.targetTransparency = 0;
+        // this.angle = 0; // 0-360
+        // this.targetAngle = 72;
+        // this.dAngle = 0.05;
+        this.transparency = 255; // 0-255
+        this.targetTransparency = 255;
         this.dTransparency = 0.05;
-        this.position = 0;
+        this.position = -1;
+        this.scanIndex = 0;
+        this.scanRate = 2500 * 4;
+        this.scanBuffer = null;
     }
 
     fadeOut() {
         this.targetTransparency = 0;
     }
 
-    fadeIn() {
-        this.targetTransparency = 255;
-    }
+    // fadeIn() {
+    //     this.targetTransparency = 255;
+    // }
 
     next() {
         this.position++;
-        if (this.position > this.memes.length) {
-            // this.targetAngle -= 1080;
-            // this.targetTransparency = 0;
-        } else {
-            let angleBetweenImages = 360 / this.memes.length;
-            this.targetAngle -= angleBetweenImages + 360;
+        this.scanIndex = 0;
+        this.scanBuffer = null;
+        this.scanBuffer = createImage(this.memes[this.position].width, this.memes[this.position].height);
+        this.scanBuffer.loadPixels();
+        for (let i = 0; i < this.scanBuffer.pixels.length; i += 4) {
+            this.scanBuffer.pixels[i] = 0;      // R
+            this.scanBuffer.pixels[i + 1] = 0;  // G
+            this.scanBuffer.pixels[i + 2] = 0;  // B
+            this.scanBuffer.pixels[i + 3] = 0;  // A
         }
-        // console.log(this.position);
+        this.scanBuffer.updatePixels();
     }
 
     reset() {
-        this.angle = 0;
-        this.targetAngle = 72;
-        this.transparency = 0;
-        this.targetTransparency = 0;
-        this.position = 0;
+        // this.angle = 0;
+        // this.targetAngle = 72;
+        this.transparency = 255;
+        this.targetTransparency = 255;
+        this.position = -1;
+        this.scanIndex = 0;
     }
 
     update() {
-        this.angle += (this.targetAngle - this.angle) * this.dAngle;
+        // this.angle += (this.targetAngle - this.angle) * this.dAngle;
         this.transparency += (this.targetTransparency - this.transparency) * this.dTransparency;
     }
 
     draw() {
-        push();
-        translate(width / 2, height * 3);
-        imageMode(CENTER);
-        let angleBetweenImages = 360 / this.memes.length;
-        this.memes.forEach((meme, i) => {
+        if (this.position >= 0) {
             push();
-            rotate(i * angleBetweenImages + this.angle);
-            translate(0, -height * 2.5);
+            translate(width / 2, height / 2);
+            imageMode(CENTER);
             tint(255, this.transparency);
-            image(meme, 0, 0);
+            this.memes[this.position].loadPixels();
+            this.scanBuffer.loadPixels();
+            if (this.memes[this.position].pixels.length / 4 > this.scanIndex) {
+                this.scanIndex += this.scanRate;
+                for (let i = 0; i < this.scanIndex * 4; i++) {
+                    this.scanBuffer.pixels[i] = this.memes[this.position].pixels[i];
+                }
+                this.scanBuffer.updatePixels();
+                image(this.scanBuffer, 0, 0);
+            } else {
+                image(this.memes[this.position], 0, 0);
+            }
             pop();
-        });
-        pop();
+        }
+
     }
 }
 
