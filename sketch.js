@@ -1,10 +1,7 @@
 // TODO:
-// fill empty square on icon grid
 // update bash script to handle keyboard interrupt and end server
-// update icons
-// check if meme is wider than window, then scale other way
-// volume variable
-// change window title for each washing
+// arabic captions
+// scanline animations
 
 let numOfMemes = 5;
 let numOfVO = 3;
@@ -18,11 +15,9 @@ let categories = [ // names of folders containing media
     "Red Washing",
     "Blue Washing",
     "Purple Washing",
-    "Vegan Washing",
-    "Pink Washing"
+    "Vegan Washing"
 ];
 let selector;
-let cols = 5;
 let rows = 2;
 let mode = "menu";
 let icons = [];
@@ -31,21 +26,45 @@ let captionEn;
 let captionAr;
 let idleCapEn;
 let idleCapAr;
+let windowName;
+let idleWindowName;
+let bgSong;
 
 window.addEventListener('load', function () {
     captionEn = document.getElementById("captions-en");
     captionAr = document.getElementById("captions-ar");
     idleCapEn = captionEn.innerHTML;
     idleCapAr = captionAr.innerHTML;
+    windowName = document.getElementById("windowname");
+    idleWindowName = windowName.innerHTML;
 });
 
 function preload() {
+    let urlParams = new URLSearchParams(window.location.search);
+    let isGay = urlParams.get('gay');
+    if (isGay && isGay.toLowerCase() === 'true') {
+        categories = [
+            "White Washing",
+            "Sports Washing",
+            "Green Washing",
+            "AI Washing",
+            "Red Washing",
+            "Blue Washing",
+            "Purple Washing",
+            "Vegan Washing",
+            "Pink Washing"
+        ];
+    };
     categories.forEach(category => {
         let memes = [];
         for (let i = 1; i <= numOfMemes; i++) {
             let meme = loadImage(`./assets/memes/${category}/${i}.jpeg`, (loadedImage) => {
-                meme.resize(0, 620);
-                memes[i-1] = meme;
+                if (meme.width / meme.height > 100 / 75) {
+                    meme.resize(900, 0);
+                } else {
+                    meme.resize(0, 640);
+                }
+                memes[i - 1] = meme;
             }, (error) => {
                 console.log("could not find image file ", error);
             });
@@ -53,7 +72,7 @@ function preload() {
         let voiceovers = [];
         for (let i = 1; i <= numOfVO; i++) {
             let voiceover = loadSound(`./assets/memes/${category}/audio/audio${i}.mp3`, (loadedAudio) => {
-                voiceovers[i-1] = voiceover;
+                voiceovers[i - 1] = voiceover;
             }, (error) => {
                 console.log("could not find audio file ", error);
             });
@@ -63,12 +82,14 @@ function preload() {
             fetch(`./assets/memes/${category}/audio/audio${i}.json`)
                 .then(response => response.json())
                 .then(jsonData => {
-                    captions[i-1] = jsonData;
+                    captions[i - 1] = jsonData;
                 })
                 .catch(error => console.error("could not read caption json ", error));
         }
         highlights.push(new Highlight(category, memes, captions, voiceovers));
     });
+    bgSong = loadSound('./assets/bgloop.mp3');
+    bgSong.setVolume(0.5);
 }
 
 function setup() {
@@ -79,7 +100,7 @@ function setup() {
     bgColour = color("#00807F"); // windows 95 teal
     background(bgColour);
     createIconGrid();
-    selector = new Selector(0, 0);
+    selector = new Selector(icons, 0);
 }
 
 function draw() {
@@ -101,9 +122,9 @@ function keyPressed() {
     } else if (keyCode === RIGHT_ARROW) {
         if (mode == "menu") { selector.goRight(); }
     } else if (keyCode === UP_ARROW) {
-        if (mode == "menu") { selector.goUp(); }
+        if (mode == "menu") { selector.goLeft(); }
     } else if (keyCode === DOWN_ARROW) {
-        if (mode == "menu") { selector.goDown(); }
+        if (mode == "menu") { selector.goRight(); }
     } else if (keyCode === 32) { //space
         if (mode != "highlight") {
             mode = "highlight";
@@ -117,23 +138,20 @@ function keyPressed() {
         mode = "menu";
         highlights[selector.selected].reset();
         clearTimeout(menuTimer);
+    } else if (keyCode === 77) {
+        if (bgSong.isLooping()) {
+            bgSong.stop();
+        } else {
+            bgSong.loop();
+        }
+
     }
 }
 
-function createIconGrid() {
-    for (let row = 0; row < 2; row++) {
-        for (let col = 0; col < 5; col++) {
-            if (col == 4 && row == 1) {
-                break;
-            }
-            let iconimage = loadImage(`./assets/memes/${categories[col + (row * 5)]}/icon.ico`)
-            icons.push(new Icon(categories[col + (row * 5)], iconimage, col, row))
-        }
-    }
-}
 
 class Highlight {
     constructor(name, memes, captions, audio) {
+        this.name = name;
         this.title = new Title(name);
         this.carousel = new Carousel(memes);
         this.memes = memes;
@@ -146,7 +164,7 @@ class Highlight {
     }
 
     setCaptions(index) {
-        console.log(this.captions[index]["sentences"]);
+        // console.log(this.captions[index]["sentences"]);
         this.captions[index]["sentences"].forEach((sentence) => {
             // console.log(sentence["start"]);
             this.captionTimers.push(setTimeout(() => {
@@ -169,6 +187,7 @@ class Highlight {
         while (this.captionTimers.length > 0) {
             clearTimeout(this.captionTimers.pop());
         }
+        windowName.innerHTML = idleWindowName;
     }
 
     start() {
@@ -176,7 +195,8 @@ class Highlight {
         this.audioIndex = this.playcount % 3;
         // start audio
 
-        console.log(this.audio[this.audioIndex], this.audioIndex);
+        // console.log(this.audio[this.audioIndex], this.audioIndex);
+        this.audio[this.audioIndex].setVolume(1);
         this.audio[this.audioIndex].play();
         // time captions
         this.setCaptions(this.audioIndex);
@@ -201,6 +221,9 @@ class Highlight {
         this.timers.push(setTimeout(() => {
             this.carousel.fadeOut();
         }, 35000));
+
+        // set window name
+        windowName.innerHTML = this.name;
     }
 
     update() {
@@ -341,19 +364,46 @@ class Title {
     }
 }
 
+function createIconGrid() {
+    let botCols = Math.floor(categories.length / 2);
+    let topCols = categories.length - botCols;
+
+    for (let row = 0; row < rows; row++) {
+        if (row == 0) {
+            for (let col = 0; col < topCols; col++) {
+                let iconimage = loadImage(`./assets/memes/${categories[col]}/icon.ico`);
+                icons.push(new Icon(categories[col], iconimage, col, row, topCols));
+            }
+        } else {
+            for (let col = 0; col < botCols; col++) {
+                let iconimage = loadImage(`./assets/memes/${categories[col + topCols]}/icon.ico`);
+                icons.push(new Icon(categories[col + topCols], iconimage, col, row, botCols));
+            }
+        }
+    }
+    // icons from https://gitlab.com/metsatron/BeOS-r5-Icons
+}
+
 class Icon {
-    constructor(name, image, col, row) {
+    constructor(name, image, col, row, colWidth) {
         this.name = name;
         this.image = image;
         this.col = col;
         this.row = row;
+        this.colWidth = colWidth;
+    }
+
+    get pos() {
+        return {
+            x: (this.col + 1) * width / (this.colWidth + 1),
+            y: (this.row + 1) * height / (rows + 1)
+        }
     }
 
     draw() {
         push();
-        translate((this.col + 1) * width / (cols + 1), (this.row + 1) * height / (rows + 1))
+        translate((this.col + 1) * width / (this.colWidth + 1), (this.row + 1) * height / (rows + 1))
         fill("white");
-        // rect(-25, -50, 50, 50);
         image(this.image, -50, -100, 100, 100)
         textAlign(CENTER, TOP);
         textFont('Times');
@@ -364,19 +414,19 @@ class Icon {
 }
 
 class Selector {
-    constructor(col, row) {
-        this.col = col;
-        this.row = row;
+    constructor(icons, index) {
+        this.icons = icons;
+        this.index = index;
         this.cursor = loadImage("assets/Cursor active.ico");
     }
 
     get selected() {
-        return (this.col + (this.row * cols));
+        return this.index;
     }
 
     draw() {
         push();
-        translate((this.col + 1) * width / (cols + 1), (this.row + 1) * height / (rows + 1))
+        translate(this.icons[this.index].pos.x, this.icons[this.index].pos.y);
         noStroke();
         fill("rgba(0, 0, 255, 0.3)");
         rect(-60, -110, 120, 180);
@@ -386,22 +436,12 @@ class Selector {
     }
 
     goLeft() {
-        this.col--;
-        if (this.col < 0) { this.col = cols - 1 };
+        this.index--;
+        if (this.index < 0) { this.index = this.icons.length - 1 };
     }
 
     goRight() {
-        this.col++;
-        if (this.col > cols - 1) { this.col = 0 };
-    }
-
-    goUp() {
-        this.row--;
-        if (this.row < 0) { this.row = rows - 1 };
-    }
-
-    goDown() {
-        this.row++;
-        if (this.row > rows - 1) { this.row = 0 };
+        this.index++;
+        if (this.index > this.icons.length - 1) { this.index = 0 };
     }
 }
